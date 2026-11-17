@@ -83,7 +83,8 @@ Note 20 for dit and Note 21 for dah.
 - Sending (RELAY, CONTACT): `Z` / `[` dit, `X` / `]` dah, Space as a straight
   key, `-` / `+` keyer speed, `H` to hear the target, or a real paddle (below).
 - On Android, tap the DIT and DAH pads to send. Back does what `Esc` does.
-- SETUP (`S` on the hub) has speed, tone, volumes and your callsign.
+- SETUP (`S` on the hub) has speed, tone, volumes, frame rate (30 by default, to
+  save battery; 60 is smoother) and your callsign.
   `F11` toggles fullscreen. `Esc` leaves a mission.
 
 ## Layout

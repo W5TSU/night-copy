@@ -14,6 +14,7 @@ const ROWS = [
   ['musicVol', 'MUSIC VOLUME', '%', 0, 1, 0.05, 'Music ducks whenever CW plays.'],
   ['rainVol', 'RAIN VOLUME', '%', 0, 1, 0.05, ''],
   ['crt', 'SCANLINES', '', 0, 1, 1, 'CRT scanlines.'],
+  ['fps', 'FRAME RATE', 'FPS', 30, 60, 30, '30 uses about half the CPU of 60, which saves battery. 60 is smoother.'],
 ];
 
 export class Settings {
@@ -91,7 +92,9 @@ export class Settings {
     backdrop(game, 'bg-shack-hub', { dark: 0.75, rainAlpha: 0.2 });
     g.text('SETUP', 24, 40, { size: 52, color: C.cyan, spacing: 5 });
     const w = Math.min(900, g.W - 40), x = (g.W - w) / 2;
-    let y = 90;
+    // Rows squeeze a little in landscape so they all fit.
+    const rh = g.portrait ? 44 : 42;
+    let y = g.portrait ? 90 : 84;
     ROWS.forEach(([key, label, unit], i) => {
       const v = s[key];
       const shown = key === 'call' ? (this.editing !== null ? `${this.editing}_` : v || 'NOT SET') : typeof v === 'boolean' ? (key === 'modeB' ? (v ? 'B' : 'A') : v ? 'ON' : 'OFF') : unit === '%' ? `${Math.round(v * 100)}%` : `${v} ${unit}`;
@@ -103,13 +106,13 @@ export class Settings {
         if (this.editing !== null) {
           if (game.button('call-ok', x + w - 250, y + 4, 60, 32, 'OK', { size: 22 })) this.finishEdit();
         } else if (game.button('call-edit', x + w - 250, y + 4, 70, 32, 'EDIT', { size: 22 })) { this.sel = i; this.startEdit(); }
-        y += 44;
+        y += rh;
         return;
       }
       if (game.button(`m-${key}`, x + w - 250, y + 4, 40, 32, '<', { size: 24 })) { this.sel = i; this.change(i, -1); }
       g.text(shown, x + w - 130, y + 20, { size: 26, color: C.white, align: 'center' });
       if (game.button(`p-${key}`, x + w - 50, y + 4, 40, 32, '>', { size: 24 })) { this.sel = i; this.change(i, 1); }
-      y += 44;
+      y += rh;
     });
     const help = this.askCall ? 'Type your callsign (or your name) and press Enter. You will send it in RELAY and CONTACT.' : ROWS[this.sel][6];
     if (help) g.text(help, g.W / 2, y + 16, { size: 16, font: FONT.ui, color: C.cyan, align: 'center' });

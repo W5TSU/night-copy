@@ -67,10 +67,15 @@ class Game {
     this.go('title');
     let last = performance.now();
     const loop = (t) => {
-      const dt = Math.min(0.05, (t - last) / 1000);
-      last = t;
-      // window.cybercw.paused = true stops drawing (debug: frees the main thread).
-      if (!this.paused) this.frame(dt);
+      // Draw at the FRAME RATE setting (30 or 60), not the screen's rate: a
+      // 120 Hz phone would otherwise draw four times as often as 30 needs.
+      // The 2 ms slack stops a rate the screen matches from halving.
+      if (t - last >= 1000 / this.store.p.settings.fps - 2) {
+        const dt = Math.min(0.05, (t - last) / 1000);
+        last = t;
+        // window.cybercw.paused = true stops drawing (debug: frees the main thread).
+        if (!this.paused) this.frame(dt);
+      }
       requestAnimationFrame(loop);
     };
     requestAnimationFrame(loop);
