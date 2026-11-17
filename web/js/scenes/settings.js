@@ -1,5 +1,6 @@
 import { C, FONT } from '../gfx.js';
 import { backdrop } from './common.js';
+import { BUILD } from '../build.js';
 
 const ROWS = [
   ['call', 'YOUR CALL', '', 0, 0, 0, 'Sent in RELAY and CONTACT. Enter to edit, type it, Enter to save.'],
@@ -116,8 +117,9 @@ export class Settings {
     const p = game.paddle;
     g.text(`${p.statusText()}${p.input ? `  //  ${p.input.name}` : ''}`, g.W / 2, y, { size: 16, font: FONT.ui, color: p.state === 'ok' ? C.green : C.amber, align: 'center' });
     y += 22;
-    if (game.button('midi', g.W / 2 - 300, y, 290, 40, 'CONNECT PADDLE', { size: 22, color: C.green })) { p.connect(); }
-    if (game.button('fs', g.W / 2 + 10, y, 290, 40, 'FULLSCREEN', { size: 22, color: C.cyan })) game.fullscreen();
+    // The Android app is always full screen: no FULLSCREEN button there.
+    if (game.button('midi', g.W / 2 - (BUILD.android ? 145 : 300), y, 290, 40, 'CONNECT PADDLE', { size: 22, color: C.green })) { p.connect(); }
+    if (!BUILD.android && game.button('fs', g.W / 2 + 10, y, 290, 40, 'FULLSCREEN', { size: 22, color: C.cyan })) game.fullscreen();
     if (!this.askCall && game.button('back', 24, g.H - 84, 200, 44, 'BACK', { size: 26, color: C.amber })) this.leave();
     g.text('ARROWS TO ADJUST  //  ESC: BACK', g.W - 24, g.H - 62, { size: 13, font: FONT.ui, color: C.grey, align: 'right', glow: 0 });
   }
